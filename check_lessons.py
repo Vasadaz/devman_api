@@ -1,6 +1,7 @@
-import  requests
+import requests
 
 from environs import Env
+
 
 def get_lessons(token: str) -> dict:
     headers = {'Authorization': f'Token {token}'}
@@ -11,7 +12,8 @@ def get_lessons(token: str) -> dict:
 
     return response.json()
 
-def get_long_polling(token: str) -> dict:
+
+def get_verification_results(token: str) -> dict:
     headers = {'Authorization': f'Token {token}'}
     url = 'https://dvmn.org/api/long_polling/'
 
@@ -21,7 +23,6 @@ def get_long_polling(token: str) -> dict:
     return response.json()
 
 
-
 if __name__ == '__main__':
     env = Env()
     env.read_env()
@@ -29,6 +30,5 @@ if __name__ == '__main__':
 
     lessons = get_lessons(token)
     print(lessons)
-    long_polling = get_long_polling(token)
-    print(long_polling)
-
+    verifications = get_verification_results(token)
+    print(verifications)
