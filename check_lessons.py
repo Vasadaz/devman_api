@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import requests
 
 from environs import Env
@@ -29,6 +31,8 @@ if __name__ == '__main__':
     token = env.str('DEVMAN_TOKEN')
 
     lessons = get_lessons(token)
-    print(lessons)
-    verifications = get_verification_results(token)
-    print(verifications)
+    pprint(lessons)
+
+    while True:
+        verifications = get_verification_results(token)
+        pprint(verifications)
