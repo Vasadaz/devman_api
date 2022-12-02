@@ -7,7 +7,7 @@ def send_msg(token: str, chat_id: str, msg: str = ''):
     user = bot.get_chat(chat_id=chat_id)
 
     if not msg:
-        msg = f'Hellow, {user.first_name}!'
+        msg = f'Привет, {user.first_name}!'
 
     bot.send_message(chat_id=chat_id, text=msg)
 
