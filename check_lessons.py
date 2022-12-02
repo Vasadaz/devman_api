@@ -1,21 +1,9 @@
 import time
-from pprint import pprint
 
 import requests
 
 from environs import Env
-
 from telegram_bot import send_msg
-
-
-def get_lessons(token: str) -> dict:
-    headers = {'Authorization': f'Token {token}'}
-    url = 'https://dvmn.org/api/user_reviews/'
-
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-
-    return response.json()
 
 
 def get_verification_results(token: str, timestamp: float) -> dict:
@@ -49,13 +37,21 @@ if __name__ == '__main__':
             verifications = get_verification_results(dvm_token, timestamp)
 
             if verifications['status'] == 'found':
-                tg_msg = verifications['new_attempts']
-                send_msg(
-                    token=tg_token,
-                    chat_id=tg_chat_id,
-                    msg=tg_msg
-                )
-                print(tg_msg)
+                results = verifications['new_attempts']
+
+                for result in results:
+                    msg = f'Есть проверенная работа "{result["lesson_title"]}"\n{result["lesson_url"]}\n\n'
+
+                    if result['is_negative']:
+                        msg += 'Есть ошибки...'
+                    else:
+                        msg += 'Работа успешно принята!!!'
+
+                    send_msg(
+                        token=tg_token,
+                        chat_id=tg_chat_id,
+                        msg=msg,
+                    )
                 timestamp = verifications['last_attempt_timestamp']
             else:
                 timestamp = verifications['timestamp_to_request']
@@ -63,4 +59,4 @@ if __name__ == '__main__':
             print(error)
         except requests.exceptions.ConnectionError as error:
             print(error)
-            time.sleep(10)
+            time.sleep(60)
