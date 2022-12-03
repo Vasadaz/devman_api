@@ -6,24 +6,6 @@ from environs import Env
 from telegram_bot import send_msg
 
 
-def get_verification_results(token: str, timestamp: float) -> dict:
-    headers = {'Authorization': f'Token {token}'}
-    params = {
-        'timestamp': timestamp,
-    }
-    url = 'https://dvmn.org/api/long_polling/'
-
-    response = requests.get(
-        url,
-        headers=headers,
-        params=params,
-        timeout=120,
-    )
-    response.raise_for_status()
-
-    return response.json()
-
-
 if __name__ == '__main__':
     env = Env()
     env.read_env()
@@ -34,7 +16,19 @@ if __name__ == '__main__':
 
     while True:
         try:
-            verifications = get_verification_results(dvm_token, timestamp)
+            headers = {'Authorization': f'Token {dvm_token}'}
+            params = {'timestamp': timestamp}
+            url = 'https://dvmn.org/api/long_polling/'
+
+            response = requests.get(
+                url,
+                headers=headers,
+                params=params,
+                timeout=120,
+            )
+            response.raise_for_status()
+
+            verifications = response.json()
 
             if verifications['status'] == 'found':
                 results = verifications['new_attempts']
