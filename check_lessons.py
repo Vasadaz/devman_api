@@ -1,9 +1,9 @@
 import time
 
 import requests
+import telegram
 
 from environs import Env
-from telegram_bot import send_msg
 
 
 if __name__ == '__main__':
@@ -24,7 +24,7 @@ if __name__ == '__main__':
                 url,
                 headers=headers,
                 params=params,
-                timeout=120,
+                timeout=10,
             )
             response.raise_for_status()
 
@@ -41,16 +41,14 @@ if __name__ == '__main__':
                     else:
                         msg += 'Работа успешно принята!!!'
 
-                    send_msg(
-                        token=tg_token,
-                        chat_id=tg_chat_id,
-                        msg=msg,
-                    )
+                    bot = telegram.Bot(tg_token)
+                    bot.send_message(chat_id=tg_chat_id, text=msg)
+
                 timestamp = verifications['last_attempt_timestamp']
             else:
                 timestamp = verifications['timestamp_to_request']
         except requests.exceptions.ReadTimeout as error:
-            print(error)
+            pass
         except requests.exceptions.ConnectionError as error:
             print(error)
             time.sleep(60)
