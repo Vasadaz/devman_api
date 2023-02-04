@@ -6,17 +6,35 @@ import telegram
 
 from environs import Env
 
+logger = logging.getLogger(__file__)
+
+
+class TelegramLogsHandler(logging.Handler):
+
+    def __init__(self, tg_bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    logging.info('Start Devman bot.')
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s:%(levelname)s:%(message)s")
+    logger.setLevel(logging.DEBUG)
 
     env = Env()
     env.read_env()
     dvm_token = env.str('DEVMAN_TOKEN')
     tg_token = env.str('TELEGRAM_TOKEN')
     tg_chat_id = env.str('TELEGRAM_CHAT_ID')
+    bot = telegram.Bot(tg_token)
     timestamp = None
+
+    logger.addHandler(TelegramLogsHandler(bot, tg_chat_id))
+    logger.info('Start Devman bot.')
 
     while True:
         try:
@@ -47,14 +65,16 @@ if __name__ == '__main__':
                     else:
                         msg += 'Работа успешно принята!!!'
 
-                    bot = telegram.Bot(tg_token)
                     bot.send_message(chat_id=tg_chat_id, text=msg)
 
                 timestamp = verifications['last_attempt_timestamp']
             else:
                 timestamp = verifications['timestamp_to_request']
         except requests.exceptions.ReadTimeout as error:
-            logging.error(f'Devman bot: {error}')
+            logging.info(f'Devman bot not found any new proven lessons..')
         except requests.exceptions.ConnectionError as error:
-            logging.error(f'Devman bot: {error}')
+            logging.error(f'Devman bot {error}')
+            time.sleep(60)
+        except Exception as err:
+            logger.exception(f'Unexpected error - {err}:\n\n')
             time.sleep(60)
