@@ -1,3 +1,4 @@
+import logging
 import time
 
 import requests
@@ -7,6 +8,9 @@ from environs import Env
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    logging.info('Start Devman bot.')
+
     env = Env()
     env.read_env()
     dvm_token = env.str('DEVMAN_TOKEN')
@@ -16,6 +20,8 @@ if __name__ == '__main__':
 
     while True:
         try:
+            logging.info('Devman bot checking lessons.')
+
             headers = {'Authorization': f'Token {dvm_token}'}
             params = {'timestamp': timestamp}
             url = 'https://dvmn.org/api/long_polling/'
@@ -48,7 +54,7 @@ if __name__ == '__main__':
             else:
                 timestamp = verifications['timestamp_to_request']
         except requests.exceptions.ReadTimeout as error:
-            pass
+            logging.error(f'Devman bot: {error}')
         except requests.exceptions.ConnectionError as error:
-            print(error)
+            logging.error(f'Devman bot: {error}')
             time.sleep(60)
