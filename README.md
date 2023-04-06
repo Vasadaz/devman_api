@@ -23,10 +23,18 @@
 6. [Получить свой ID.](https://t.me/userinfobot)
 
 6. Создать файл `.env` с данными:
+    - Обязательные
     ```dotenv
-    DEVMAN_TOKEN=токен Devman
-    TELEGRAM_TOKEN=токен Телеграм бота
-    TELEGRAM_CHAT_ID=свой ID
+    DEVMAN_TOKEN=81ea0f38...ca3f # Токен Девмана
+    TELEGRAM_BOT_TOKEN=581247650:AAH...H7A # Токен основного бота Telegram.
+    TELEGRAM_CHAT_ID=123456789 # Ваш id Telegram, сюда будут отправлятся отправляться события проверки.
+    ```
+   
+    - Необязательные переменные для логирования.
+    ```dotenv
+    TELEGRAM_ADMIN_BOT_TOKEN=5934478120:AAF...4X8 # Токен бота Telegram для отправки сообщений об ошибках.
+    TELEGRAM_ADMIN_CHAT_ID=123456789 # Ваш id Telegram, сюда будут отправлятся сообщения об ошибках.
+    TELEGRAM_BOT_NAME="Бот для проверки уроков" # Произвольное будет добавленно к его @username основного бота.
     ```
 
 7. Запуск бота:
