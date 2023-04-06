@@ -11,7 +11,7 @@ from bot_logger import BotLogsHandler
 logger = logging.getLogger(__file__)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s:%(levelname)s:%(message)s")
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
     logger.setLevel(logging.DEBUG)
 
     env = Env()
