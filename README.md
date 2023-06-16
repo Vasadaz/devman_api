@@ -38,10 +38,29 @@
     ```
 
 7. Запуск бота:
-    
     ```shell
-    python3 check_lessons.py
+    python3 run_check_lessons.py
     ```
+
+
+## Как запустить приложение в контейнере Docker
+
+1. [Установить Docker Engine на сервер](https://docs.docker.com/engine/install/ubuntu/).
+
+2. Перейти в директорию проекта `devman_bot`.
+
+3. Соберите к образ Docker:
+    ```shell
+    docker build -t devman_bot .
+    ```
+
+4. Запустите контейнер с образом devman_bot:
+   ```shell
+    docker run devman_bot
+    ```
+
+5. Теперь бот работает в своём контейнере Docker.
+
 
 ### Цель проекта
 
