@@ -49,7 +49,7 @@
 
 2. Перейти в директорию проекта `devman_bot`.
 
-3. Соберите к образ Docker:
+3. Соберите образ Docker:
     ```shell
     docker build -t devman_bot .
     ```
